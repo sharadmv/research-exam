@@ -1,11 +1,12 @@
 \documentclass[10pt, compress]{beamer}
 
-\usetheme{m}
+\usetheme{metropolis}           % Use metropolis theme
 
 \usepackage{natbib}
 \bibliographystyle{unsrt}
 \usepackage{booktabs}
 \usepackage[scale=2]{ccicons}
+\usefonttheme[onlymath]{serif}
 
 %\usemintedstyle{trac}
 
@@ -39,7 +40,7 @@
   The most popular methods for clustering produce
   flat clusterings.
 
-  A \textbf{flat clustering} is a partition of a set of data,
+  A \alert{flat clustering} is a partition of a set of data,
   or an assignment of each data point into one of
   several disjoint sets.
 
@@ -49,7 +50,7 @@
 \end{frame}
 
 \begin{frame}{Flat clustering}
-  The most popular algorithm for flat clustering is \textbf{k-means}.
+  The most popular algorithm for flat clustering is \alert{k-means}.
   \begin{enumerate}
     \item<2-> Pick a number of clusters $K$.
     \item<3-> Randomly initialize cluster centers $\{\mu_1, \ldots, \mu_K\}$.
@@ -80,7 +81,7 @@
 \end{frame}
 
 \begin{frame}{Hierarchical clustering}
-  In \textbf{hierarchical clustering}, data
+  In \alert{hierarchical clustering}, data
   is recursively partitioned to form a tree (typically binary),
   also called a hierarchy.
 
@@ -161,8 +162,25 @@
 \end{frame}
 
 \begin{frame}{Ambiguous data}
-  Consider scenarios when the hierarchy is
+  Consider the following scenarios when the hierarchy is
   \textbf{ambiguous}.
+
+  The aforementioned methods produce a single tree,
+  but we need a more flexible framework to handle
+  this scenario.
+\end{frame}
+
+\begin{frame}{Probabilistic reasoning}
+  A more general approach is to
+  model our uncertainty with \textbf{probability}.
+
+  Instead of outputting a single tree,
+  we output a probability distribution over all possible
+  trees.
+\end{frame}
+
+\begin{frame}{Bayesian learning}
+  We take a quick detour to review Bayesian learning.
 \end{frame}
 
 \begin{frame}{References}
