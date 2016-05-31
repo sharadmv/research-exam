@@ -2,8 +2,7 @@
 
 \usetheme{metropolis}           % Use metropolis theme
 
-\usepackage{natbib}
-\bibliographystyle{unsrt}
+\usepackage[export]{adjustbox}
 \usepackage{booktabs}
 \usepackage[scale=2]{ccicons}
 \usefonttheme[onlymath]{serif}
@@ -12,9 +11,11 @@
 
 \title{A review on methods for Bayesian hierarchical clustering}
 \subtitle{}
-\date{\today}
+\date{June 3, 2016}
 \author{Sharad Vikram}
 \institute{UCSD}
+
+\setcounter{tocdepth}{1}
 
 \begin{document}
 
@@ -22,16 +23,21 @@
 
 \section{Background}
 
+\subsection{Clustering}
+
 \begin{frame}{Unsupervised learning}
   In unsupervised learning, we are interested in finding
         underlying structure
         in data.
 
+  \pause
   Current methods include:
   \begin{itemize}
-    \item<2-> \textbf{Dimensionality reduction:} finding low-dimensional
+  \pause
+    \item \textbf{Dimensionality reduction:} finding low-dimensional
       representations of high-dimensional data
-    \item<3-> \textbf{Clustering:} discovering natural groups
+  \pause
+    \item \textbf{Clustering:} discovering natural groups
       in data
   \end{itemize}
 \end{frame}
@@ -43,9 +49,11 @@
   A \alert{flat clustering} is a partition of a set of data,
   or an assignment of each data point into one of
   several disjoint sets.
+  
+  \pause
 
   \begin{align}
-    \{1, 2, \ldots, N\} \rightarrow \{\{1,2\}, \{3, 4, 5\}, \ldots, \{N - 1, N\}\}
+    \{1, 2, \ldots, N\} \rightarrow \{\{\ldots\}, \{\ldots\}, \ldots, \{\ldots\}\}
   \end{align}
 \end{frame}
 
@@ -60,10 +68,11 @@
         \item Assign each cluster center to the mean of its assigned data points.
       \end{itemize}
   \end{enumerate}
+  \uncover<5->{
   This is equivalent to optimizing the loss function:
   \begin{align}
     L(\mu_1, \ldots, \mu_K) = \sum_{i = 1}^N \min_k \|x_i - \mu_k\|^2_2
-  \end{align}
+  \end{align}}
 \end{frame}
 
 \begin{frame}{Flat clustering: pros and cons}
@@ -85,7 +94,11 @@
   is recursively partitioned to form a tree (typically binary),
   also called a hierarchy.
 
-  %TODO: insert image
+  \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/tree-1234-balanced}
+  \end{center}
+
+  \pause
 
   Each leaf in the tree is a single data point,
   The root is the grouping of all data points
@@ -124,6 +137,8 @@
   A dissimilarity function measures how
   different two data points are from each other.
 
+  \pause
+
   Example dissimilarity functions include:
   \begin{itemize}
     \item Euclidean distance: $d(x, x') = \|x - x'\|_2^2$
@@ -138,6 +153,8 @@
   different two \textbf{clusters} are from each other
   in terms of dissimilarity function $d$.
 
+  \pause
+
   Example linkage criteria include:
   \begin{itemize}
     \item<2-> Single linkage: $D(A, B) = \min_{i \in A, j\in B} d(x_i, x_j)$
@@ -146,11 +163,32 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Agglomerative clustering}
+  We iteratively merge the two closest clusters until 
+  we have one cluster left.
+
+  \begin{center}
+    \includegraphics<1>{img/agglomerative-clustering-0}
+    \includegraphics<2>{img/agglomerative-clustering-1}
+    \includegraphics<3>{img/agglomerative-clustering-2}
+    \includegraphics<4>{img/agglomerative-clustering-3}
+
+  \end{center}
+
+  \centering
+  \begin{itemize}
+    \item<1>[] $\{\{1\}, \{2\}, \{3\}, \{4\}\}$\\
+    \item<2>[] $\{\{1, 2\}, \{3\}, \{4\}\}$\\
+    \item<3>[] $\{\{1, 2\}, \{3, 4\}\}$\\
+    \item<4>[] $\{\{1, 2, 3, 4\}\}$\\
+  \end{itemize}
+\end{frame}
+
 \begin{frame}{Agglomerative clustering examples}
   \begin{figure}
-    \includegraphics[width=\textwidth]{img/dendrograms}
+    \includegraphics[frame,width=\textwidth]{img/dendrograms}
     \caption{Trees produced by agglomerative clustering algorithms
-    with different linkage criteria. Source: \citep{Hastie2009}}
+    with different linkage criteria. Source: \cite{Hastie2009}}
     \label{fig:dendrograms}
   \end{figure}
 \end{frame}
@@ -162,159 +200,237 @@
 \end{frame}
 
 \begin{frame}{Ambiguous data}
-  Consider the following scenarios when the hierarchy is
-  \textbf{ambiguous}.
+  Consider the two following scenarios where
+  circles represent tight clusters of data.
 
-  The aforementioned methods produce a single tree,
-  but we need a more flexible framework to handle
-  this scenario.
+  \begin{center}
+  \includegraphics[width=0.3\textwidth]{img/3-cluster}\hfill
+  \includegraphics[width=0.45\textwidth]{img/3-cluster-line}
+  \end{center}
+
+  \pause
+
+  A single binary tree is not sufficient to describe either
+  of these configurations.
+
+  %\centering
+  %\includegraphics[width=0.3\textwidth]{img/tree-123} \hfill
+  %\includegraphics[width=0.3\textwidth]{img/tree-132} \hfill
+  %\includegraphics[width=0.3\textwidth]{img/tree-231}
+
+\end{frame}
+
+\begin{frame}{Multifurcating trees}
+  Perhaps extending our binary trees to $k$-ary trees will help.
+
+  \begin{center}
+    \includegraphics<1>[width=0.8\textwidth]{img/3-cluster-both.png}
+    \includegraphics<2>[width=0.8\textwidth]{img/3-cluster-both-2.png}
+    \includegraphics<3>[width=0.8\textwidth]{img/3-cluster-both-3.png}
+  \end{center}
+
+\end{frame}
+
+\begin{frame}{Uncertainty in hierarchies}
+  Furthermore, small perturbations in our data
+  can have an effect on the output
+  hierarchy.
+
+  \begin{center}
+    \includegraphics<1>[width=0.8\textwidth]{img/3-cluster-line-noperturb}
+    \includegraphics<2->[width=0.8\textwidth]{img/3-cluster-line-perturb}
+  \end{center}
+
+  \uncover<3>{We need a more general approach.}
 \end{frame}
 
 \begin{frame}{Probabilistic reasoning}
-  A more general approach is to
-  model our uncertainty with \textbf{probability}.
-
+  A better approach is to
+  model ambiguity and uncertainty with \textbf{probability}.
   Instead of outputting a single tree,
   we output a probability distribution over all possible
   trees.
+
+  \begin{center}
+    \includegraphics<2>[width=0.7\textwidth]{img/3-cluster-distribution.png}
+    \includegraphics<3>[width=0.7\textwidth]{img/3-cluster-linear-distribution.png}
+  \end{center}
 \end{frame}
 
-\begin{frame}{Bayesian learning}
+\subsection{Bayesian learning}
+
+\begin{frame}{Latent variable models}
   We take a quick detour to review Bayesian learning.
+  \begin{center}
+    \includegraphics<2>[width=0.1\textwidth]{img/latent-variable-model-0}
+    \includegraphics<3->[width=0.1\textwidth]{img/latent-variable-model}
+  \end{center}
+\uncover<4->{
+  Our data $X$ is generated conditionally given a set of
+  unobserved \alert{latent} variables $\theta$.
+}
 \end{frame}
 
-\begin{frame}{References}
-  \bibliography{main}
+\begin{frame}{Distributions of interest}
+  We are interested in the \alert{posterior distribution}
+  of latent variables given data, $P(\theta | X)$,
+  calculated via Bayes rule.
+  \pause
+
+  \begin{align}
+    P(\theta | X) = \frac{P(X | \theta)P(\theta)}{P(X)} = \frac{P(X | \theta)P(\theta)}{\int_\Theta P(X|\theta)P(\theta)d\theta}
+  \end{align}
+  \pause
+  $P(\theta)$ is called the \alert{prior distribution} and $P(X|\theta)$ is called the
+  \alert{likelihood model}. They are specified beforehand.
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{mtheme}
+\begin{frame}{Bayesian inference}
+  Typically the hardest part of computing the
+  the posterior distribution is calculating
+  $P(X) = \int_\Theta P(X|\theta)P(\theta)d\theta$, the \alert{marginal distribution}.
 
-  The \emph{mtheme} is a Beamer theme with minimal visual noise inspired by the
-  \href{https://github.com/hsrmbeamertheme/hsrmbeamertheme}{\textsc{hsrm} Beamer
-  Theme} by Benjamin Weiss.
+   \pause 
 
-  Enable the theme by loading
+  When the prior $P(\theta)$ and likelihood $P(X|\theta)$ are
+  conjugate, the posterior is analytically computable.
 
-  %\begin{minted}[fontsize=\small]{latex}
-    %\documentclass{beamer}
-    %\usetheme{m}
-  %\end{minted}
+  \pause
 
-  Note, that you have to have Mozilla's \emph{Fira Sans} font and XeTeX
-  installed to enjoy this wonderful typography.
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Sections}
-  Sections group slides of the same topic
-
-  %\begin{minted}[fontsize=\small]{latex}
-    %\section{Elements}
-  %\end{minted}
-
-  for which the \emph{mtheme} provides a nice progress indicator \ldots
-\end{frame}
-
-\section{Elements}
-
-\begin{frame}[fragile]
-  \frametitle{Typography}
-      %\begin{minted}[fontsize=\small]{latex}
-%The theme provides sensible defaults to \emph{emphasis}
-%text, \alert{accent} parts or show \textbf{bold} results.
-      %\end{minted}
-
-  \begin{center}becomes\end{center}
-
-  The theme provides sensible defaults to \emph{emphasis} text,
-  \alert{accent} parts or show \textbf{bold} results.
-\end{frame}
-\begin{frame}{Lists}
-  \begin{columns}[onlytextwidth]
-    \column{0.5\textwidth}
-      Items
-      \begin{itemize}
-        \item Milk \item Eggs \item Potatos
-      \end{itemize}
-
-    \column{0.5\textwidth}
-      Enumerations
-      \begin{enumerate}
-        \item First, \item Second and \item Last.
-      \end{enumerate}
-  \end{columns}
-\end{frame}
-\begin{frame}{Descriptions}
-  \begin{description}
-    \item[PowerPoint] Meeh.
-    \item[Beamer] Yeeeha.
-  \end{description}
-\end{frame}
-\begin{frame}{Animation}
-  \begin{itemize}[<+- | alert@+>]
-    \item \alert<4>{This is\only<4>{ really} important}
-    \item Now this
-    \item And now this
+  Otherwise, we usually approximate it with methods such as:
+  \begin{itemize}
+    \item Loopy belief propagation
+    \item Markov chain Monte Carlo (MCMC)
+    \item Variational inference
+    \item MAP estimation via EM
   \end{itemize}
 \end{frame}
-\begin{frame}{Figures}
-  \begin{figure}
-    \caption{Rotated square from
-    \href{http://www.texample.net/tikz/examples/rotated-polygons/}{texample.net}.}
-  \end{figure}
-\end{frame}
-\begin{frame}{Tables}
-  \begin{table}
-    \caption{Largest cities in the world (source: Wikipedia)}
-    \begin{tabular}{lr}
-      \toprule
-      City & Population\\
-      \midrule
-      Mexico City & 20,116,842\\
-      Shanghai & 19,210,000\\
-      Peking & 15,796,450\\
-      Istanbul & 14,160,467\\
-      \bottomrule
-    \end{tabular}
-  \end{table}
-\end{frame}
-\begin{frame}{Blocks}
 
-  \begin{block}{This is a block title}
-    This is soothing.
-  \end{block}
+\section{Bayesian hierarchical clustering}
 
-\end{frame}
-\begin{frame}{Math}
-  \begin{equation*}
-    e = \lim_{n\to \infty} \left(1 + \frac{1}{n}\right)^n
-  \end{equation*}
-\end{frame}
-\begin{frame}{Quotes}
-  \begin{quote}
-    Veni, Vidi, Vici
-  \end{quote}
+\begin{frame}{BHC as a latent variable model}
+  Bayesian hierarchical clustering is a
+  statistical approach, specifically
+  a \alert{latent variable model}.
+  \pause
+  \begin{center}
+    \includegraphics[width=0.3\textwidth]{img/bhc-lvm}
+  \end{center}
+  It is composed of data $X$ and
+  latent variables $T$ and $\theta$.
+  \pause
+  \begin{itemize}
+    \item $T$ is a tree structure, sampled from a \alert{tree prior} distribution $P(T)$.
+    \item $\theta$ is a set of parameters, generated in a \alert{tree likelihood} model $P(\theta | T)$.
+  \end{itemize}
 \end{frame}
 
-%\plain{Dark background}{\vspace{-2em}\begin{center}\includegraphics[width=\textwidth]{images/valley.jpg}\end{center}}
+\begin{frame}{Tree priors}
+  Most often we are interested in rooted binary trees with labeled leaves,
+  also called \alert{cladograms}.
+
+  \begin{center}
+    \includegraphics<1>[width=0.4\textwidth]{img/tree-4}
+    \includegraphics<2>[width=0.4\textwidth]{img/tree-4-ordering}
+    \includegraphics<3>[width=0.4\textwidth]{img/tree-4-ordering-times}
+  \end{center}
+
+  Very often, cladograms will contain additional information.
+
+  \begin{itemize}
+    \item<2-> An ordering on the internal nodes
+    \item<3-> Times associated with each node
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Tree priors}
+  Tree priors are probability distributions over cladograms
+  and often include additional information
+  in the nodes.
+
+  \pause
+
+  The simplest distribution is the uniform distribution over
+  cladograms.
+
+  \pause
+
+  \begin{center}
+    \includegraphics[width=0.6\textwidth]{img/uniform-distribution}
+  \end{center}
+
+  \pause
+  In general, however, tree priors fall into two categories:
+  \begin{itemize}
+    \item \textbf{Coalescent models:} trees are modeled in a 
+      agglomerative fashion, merging clusters until 
+      one is left
+    \item \textbf{Diffusion models:} trees are modeled inductively,
+      starting with a tree of size $1$ and growing it to
+      a tree of size $N$
+  \end{itemize}
+\end{frame}
+
+\subsection{Coalescent models}
+
+\begin{frame}{Coalescent models}
+  Coalescent models begin with a set of $N$
+  data, or "individuals", at $t = 0$.
+
+  \begin{center}
+    \includegraphics<1>[width=0.5\textwidth]{img/coalescent-1}
+    \includegraphics<2>[width=0.5\textwidth]{img/coalescent-2}
+    \includegraphics<3>[width=0.5\textwidth]{img/coalescent-3}
+    \includegraphics<4>[width=0.5\textwidth]{img/coalescent-4}
+  \end{center}
+
+  \pause
+
+  Every iteration, we:
+  \begin{itemize}
+    \item Pick two distinct nodes $a$ and $b$ uniformly at random.
+    \item Sample a coalesce time $t$.
+    \item Create an internal node whose children are $a$ and $b$
+      with time $t$.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Kingman's coalescent}
+  Coalescent models vary based on how times are sampled
+  for internal node.
+  The simplest coalescent model is \alert{Kingman's coalescent} \cite{Kingman1982},
+  where we assume a constant coalesce rate.
+
+  \pause
+
+  Let $\delta_i$ represent the elapsed time
+  between coalescent event $i-1$ and $i$.
+  We let
+  \begin{align}
+    \delta_i \sim Exp\left(\binom{N - i + 1}{2}\right)
+  \end{align}
+\end{frame}
+\subsection{Diffusion models}
+\subsection{Other models}
+\subsection{Generalizations}
+\subsection{Inference}
+
+\section{Adding interaction}
+
+\subsection{Hierarchical clustering with constraints}
+\subsection{Intelligent subset queries}
 
 \section{Conclusion}
 
-\begin{frame}{Summary}
-
-  Get the source of this theme and the demo presentation from
-
-  \begin{center}\url{github.com/matze/mtheme}\end{center}
-
-  The theme \emph{itself} is licensed under a
-  \href{http://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons
-  Attribution-ShareAlike 4.0 International License}.
-
-  \begin{center}\ccbysa\end{center}
-
+\begin{frame}[standout]
+Questions?
 \end{frame}
 
-\plain{}{Questions?}
+\begin{frame}[allowframebreaks]{References}
+  \bibliography{main}
+  \bibliographystyle{unsrt}
+\end{frame}
 
 \end{document}
