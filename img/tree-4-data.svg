@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r"
-   sodipodi:docname="tree-4-ordering.svg"
+   sodipodi:docname="tree-4-data.svg"
    inkscape:export-filename="/home/sharad/workspace/research/research-exam/img/tree-4-ordering-times.png"
    inkscape:export-xdpi="360"
    inkscape:export-ydpi="360">
@@ -72,7 +72,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8284271"
-     inkscape:cx="99.81929"
+     inkscape:cx="194.17102"
      inkscape:cy="967.24731"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -99,7 +99,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
