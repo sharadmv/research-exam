@@ -108,12 +108,12 @@
     \includegraphics[width=0.5\textwidth]{img/tree-1234-balanced}
   \end{center}
 
-  \pause
+  %\pause
 
-  Each leaf in the tree is a single data point,
-  The root is the grouping of all data points
-  into a single cluster and internal nodes
-  are groupings of different granularities.
+  %Each leaf in the tree is a single data point,
+  %The root is the grouping of all data points
+  %into a single cluster and internal nodes
+  %are groupings of different granularities.
 \end{frame}
 
 \begin{frame}{Traditional hierarchical clustering algorithms}
@@ -137,51 +137,51 @@
   \end{block}
 \end{frame}
 
-\begin{frame}{Agglomerative clustering}
-  The inputs to an agglomerative clustering algorithm
-  are:
-  \begin{itemize}
-    \item<2-> Dataset $X = \{x_i\}_{i = 1}^N$
-    \item<3-> Dissimilarity function $d(x, x')$
-    \item<4-> Linkage criterion $D(A, B)$.
-  \end{itemize}
+%\begin{frame}{Agglomerative clustering}
+  %The inputs to an agglomerative clustering algorithm
+  %are:
+  %\begin{itemize}
+    %\item<2-> Dataset $X = \{x_i\}_{i = 1}^N$
+    %\item<3-> Dissimilarity function $d(x, x')$
+    %\item<4-> Linkage criterion $D(A, B)$.
+  %\end{itemize}
 
-\end{frame}
+%\end{frame}
 
-\begin{frame}{Dissimilarity functions}
+%\begin{frame}{Dissimilarity functions}
 
-  A dissimilarity function measures how
-  different two data points are from each other.
+  %A dissimilarity function measures how
+  %different two data points are from each other.
 
-  \pause
+  %\pause
 
- \metroset{block=fill}
-  \begin{exampleblock}{Example dissimilarity functions}
-  \begin{itemize}
-    \item Euclidean distance: $d(x, x') = \|x - x'\|_2^2$
-    \item Manhattan distance: $d(x, x') = \|x - x'\|_1$
-    \item Mahalanobis distance: $d(x, x') = (x - x')^T\Sigma(x - x')$
-  \end{itemize}
-  \end{exampleblock}
-\end{frame}
+ %\metroset{block=fill}
+  %\begin{exampleblock}{Example dissimilarity functions}
+  %\begin{itemize}
+    %\item Euclidean distance: $d(x, x') = \|x - x'\|_2^2$
+    %\item Manhattan distance: $d(x, x') = \|x - x'\|_1$
+    %\item Mahalanobis distance: $d(x, x') = (x - x')^T\Sigma(x - x')$
+  %\end{itemize}
+  %\end{exampleblock}
+%\end{frame}
 
-\begin{frame}{Linkage criteria}
+%\begin{frame}{Linkage criteria}
 
-  A linkage measures how
-  different two \textbf{clusters} are from each other
-  in terms of dissimilarity function $d$.
+  %A linkage measures how
+  %different two \textbf{clusters} are from each other
+  %in terms of dissimilarity function $d$.
 
-  \pause
+  %\pause
 
- \metroset{block=fill}
-  \begin{exampleblock}{Example linkage criteria}
-  \begin{itemize}
-    \item<2-> Single linkage: $D(A, B) = \min_{i \in A, j\in B} d(x_i, x_j)$
-    \item<3-> Complete linkage: $D(A, B) = \max_{i \in A, j\in B} d(x_i, x_j)$
-    \item<4-> Average linkage: $D(A, B) = \frac{1}{|A||B|}\sum_{i \in A, j\in B} d(x_i, x_j)$
-  \end{itemize}
-  \end{exampleblock}
-\end{frame}
+ %\metroset{block=fill}
+  %\begin{exampleblock}{Example linkage criteria}
+  %\begin{itemize}
+    %\item<2-> Single linkage: $D(A, B) = \min_{i \in A, j\in B} d(x_i, x_j)$
+    %\item<3-> Complete linkage: $D(A, B) = \max_{i \in A, j\in B} d(x_i, x_j)$
+    %\item<4-> Average linkage: $D(A, B) = \frac{1}{|A||B|}\sum_{i \in A, j\in B} d(x_i, x_j)$
+  %\end{itemize}
+  %\end{exampleblock}
+%\end{frame}
 
 \begin{frame}{Agglomerative clustering}
   We iteratively merge the two closest clusters until 
@@ -269,14 +269,13 @@
     \includegraphics<2->[width=0.8\textwidth]{img/3-cluster-line-perturb}
   \end{center}
 
-  \uncover<3>{We need a more general approach.}
+  %\uncover<3>{We need a more general approach.}
 \end{frame}
 
 \begin{frame}{Probabilistic reasoning}
-  A better approach is to
+  One approach is to
   model ambiguity and uncertainty with \textbf{probability}.
-  Instead of outputting a single tree,
-  we output a probability distribution over all possible
+  We output a probability distribution over all possible
   trees.
 
   \begin{center}
@@ -327,7 +326,7 @@
 
   Otherwise, we usually approximate it with methods such as:
   \begin{itemize}
-    \item Loopy belief propagation
+    %\item Loopy belief propagation
     \item Markov chain Monte Carlo (MCMC)
     \item Variational inference
     \item MAP estimation via EM
