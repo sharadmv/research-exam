@@ -382,13 +382,16 @@
   \end{center}
 
   \pause
-  In general, however, tree priors mostly fall into two categories:
+
+  Tree priors mostly fall into two categories:
+  \pause
  \metroset{block=fill}
   \begin{block}{Coalescent models}
     Trees are modeled in an
       agglomerative fashion, merging clusters until 
       one is left
     \end{block}
+  \pause
   \begin{block}{Diffusion models}
     Trees are modeled inductively,
       starting with a tree of size $1$ and growing it to
@@ -422,17 +425,19 @@
 
 
 \begin{frame}{Kingman's coalescent}
-  The simplest coalescent model is \alert{Kingman's coalescent} \cite{Kingman1982},
-  where we assume a constant coalesce rate.
+  The canonical coalescent model is \alert{Kingman's coalescent} \cite{Kingman1982}.
 
   There are a total of
-  $N - 1$ events happening at time $t_{N - 1} < t_{N - 2} < \cdots < t_1$.
+  $N - 1$ events happening at time $t_{N - 1} < t_{N - 2} < \cdots < t_1$,
+  which happen at a constant coalesce rate.
 
   \pause
 
   \begin{center}
     \includegraphics[width=\textwidth]{img/coalescent-times}
   \end{center}
+
+  \pause
 
 
     Let $\delta_i$ represent the elapsed time
@@ -460,6 +465,316 @@
       \end{center}
   \end{itemize}
 \end{frame}
+
+
+\subsection{Diffusion models}
+
+\begin{frame}{Diffusion models}
+  Basic idea: begin with a tree over
+    one data, then for $N$ iterations:
+  \begin{itemize}
+    \item Sample a branch and time at random.
+    \item Attach a leaf to the branch,
+      creating a new internal node with the sampled time.
+  \end{itemize}
+  \begin{center}
+    \includegraphics<2>[width=\textwidth]{img/diffusion-1}
+    \includegraphics<3>[width=\textwidth]{img/diffusion-2}
+    \includegraphics<4>[width=\textwidth]{img/diffusion-3}
+    \includegraphics<5>[width=\textwidth]{img/diffusion-4}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Dirichlet diffusion tree}
+    The simplest model is the Dirichlet diffusion tree (DDT),
+    which produces trees with both ordering
+    and times associated with internal nodes \cite{Neal2003}.
+
+    The model is defined inductively via a continuous time
+    process. Assume we have a tree of size $i - 1$.
+
+    \pause
+
+    \begin{center}
+      \includegraphics[width=0.2\textwidth]{img/ddt-1}
+    \end{center}
+
+    On each iteration, a particle labeled $i$ begins at the root and travels downwards.
+\end{frame}
+
+\begin{frame}{Dirichlet diffusion tree}
+  \textbf{Case 1:} 
+  The particle reaches an internal node.
+  \begin{center}
+      \includegraphics[width=0.13\textwidth]{img/ddt-2}
+  \end{center}
+
+  \pause
+
+  It picks one of the branches proportional to the past number
+  of particles that have picked either branch.
+
+  \pause
+
+  \begin{center}
+      \includegraphics[width=0.17\textwidth]{img/ddt-3}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Dirichlet diffusion tree}
+  \textbf{Case 2:} 
+  The particle \emph{diverges} on its current branch,
+  creating an internal node and a leaf
+  according to
+  an \alert{acquisition function}, $a(t)$.
+
+
+  \begin{center}
+      \includegraphics[width=0.09\textwidth]{img/ddt-4}
+  \end{center}
+
+  \pause
+
+  Let $m$ be the number of past particles that have traversed the current branch.
+  The probability of diverging at time $dt$ is $a(t)dt/m$.
+
+  \pause
+
+  \begin{center}
+      \includegraphics[width=0.18\textwidth]{img/ddt-5}
+  \end{center}
+
+  \pause
+
+  If $a(1) = \infty$, each particle is guaranteed to diverge before $t = 1$.
+
+\end{frame}
+
+\begin{frame}{Generalizations}
+  \begin{center}
+    \includegraphics<1>[width=0.8\textwidth]{img/tree-graph-0}
+    \includegraphics<2>[width=0.8\textwidth]{img/tree-graph-1}
+    \includegraphics<3>[width=0.8\textwidth]{img/tree-graph-2}
+    \includegraphics<4>[width=0.8\textwidth]{img/tree-graph-3}
+    \includegraphics<5>[width=0.8\textwidth]{img/tree-graph-4}
+    \includegraphics<6>[width=0.8\textwidth]{img/tree-graph-5}
+    \includegraphics<7>[width=0.8\textwidth]{img/tree-graph-6}
+    \includegraphics<8>[width=0.8\textwidth]{img/tree-graph-7}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Tree likelihood models}
+  Now, given a sample from a tree prior (assume a
+  cladogram with ordering and times),
+  we need to generate a dataset.
+
+  \begin{center}
+    \includegraphics<1>[width=\textwidth]{img/tree-data-0}
+    \includegraphics<2>[width=\textwidth]{img/tree-data-1}
+  \end{center}
+
+\end{frame}
+
+\begin{frame}{Latent tree parameters}
+  For every internal node in the tree $n$
+  we associate a latent parameter $\theta_n$
+  which is in the same space as the data.
+
+  \begin{center}
+    \includegraphics<2->[width=0.35\textwidth]{img/tree-4-parameters}
+  \end{center}
+
+  \pause
+
+  We then define:
+  \begin{itemize}
+    \item<3-> A prior distribution $P_0(\theta)$
+    \item<4-> A transition kernel $T(\theta' | \theta)$
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Example likelihood models}
+  The most common likelihood model is \alert{Brownian motion},
+  also called Gaussian diffusion, which is
+  \begin{align}
+    P_0(\theta) &= \mathcal{N}(0, \sigma_0^2I) \\
+    T(\theta' | \theta) &= \mathcal{N}(\theta, \sigma^2(t - t')),
+  \end{align}
+  where $t$ and $t'$ are the times associated with nodes
+  $\theta$ and $\theta'$ and $\sigma_0^2$ and $\sigma^2$ are hyperparameters.
+
+  \pause
+
+  Other options are:
+  \begin{itemize}
+    \item Multinomial-Dirichlet diffusion: useful for
+      categorical data
+    \item Multinomial diffusion: useful for
+      counts (such as bag-of-words)
+  \end{itemize}
+\end{frame}
+
+\subsection{Inference}
+\begin{frame}{Inference}
+  Recall the latent variable model.
+  \begin{center}
+    \includegraphics[width=0.3\textwidth]{img/bhc-lvm}
+  \end{center}
+  \pause
+
+  We are interested in computing the posterior distribution
+  $P(T, \theta | X)$ and the posterior marginal distribution
+  $P(T | X)$.
+
+  \pause
+
+  We generally use approximate methods.
+  In this report, we'll focus on a particular sampling method.
+\end{frame}
+
+\begin{frame}{Metropolis-Hastings}
+  
+  The \alert{Metropolis-Hastings} (MH) algorithm
+  is an MCMC method that uses
+  samples from a distribution $p(x)$ to approximate it.
+
+  \pause
+ \metroset{block=fill}
+  \begin{block}{Metropolis-Hastings algorithm}
+    \begin{itemize}
+      \item Given initial distribution $p_0(x)$ and proposal distribution
+        $q(x'|x)$
+      \item Instantiate $x_0$ by sampling $p_0(x)$.
+      \item Repeat for $t = 1 \ldots T$
+        \begin{itemize}
+          \item Sample $x'$ from $q(x'|x_{t - 1})$.
+          \item Calculate acceptance ratio
+            \begin{align}
+                \alpha = \frac{p(x')q(x_t | x')}{p(x_t)q(x' | x_t)}
+            \end{align}
+          \item If $\alpha > 1$, accept the sample, setting $x_t = x'$
+          \item If $\alpha \le 1$, accept $x'$ with probability $\alpha$
+            and reject otherwise, setting $x_t = x_{t - 1}$.
+        \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Sampling latent variables}
+  We are interested in sampling $P(T, \theta | X)$.
+  \begin{itemize}
+    \item Define tree proposal
+      $q_\mathcal{T}(T' | T)$
+    \item Define parameter proposal $q_\Theta(\theta' | T', \theta)$.
+  \end{itemize}
+
+  \uncover<2->{\textbf{Tree proposal:} \alert{subtree-prune and regraft} (SPR) move}
+
+  \begin{center}
+    \includegraphics<2>[width=\textwidth]{img/spr-1}
+    \includegraphics<3>[width=\textwidth]{img/spr-2}
+    \includegraphics<4->[width=\textwidth]{img/spr-3}
+  \end{center}
+
+  \uncover<5->{\textbf{Parameter proposal:} Gibbs sampling or marginalization}
+
+\end{frame}
+
+\section{Adding interaction}
+
+\begin{frame}{Why interaction?}
+  Recall the motivating example for Bayesian hierarchical clustering.
+  \begin{center}
+  \includegraphics[width=0.3\textwidth]{img/3-cluster}\hfill
+  \includegraphics[width=0.45\textwidth]{img/3-cluster-line}
+  \end{center}
+  Could a user provide feedback and help decide which hierarchy
+  makes the most sense?
+  \begin{itemize}
+    \item Interactive Bayesian Hierarchical Clustering - Vikram and Dasgupta (2016) \cite{Vikram2016}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Interactive hierarchical clustering}
+  \begin{center}
+    \includegraphics<1>[width=\textwidth]{img/interaction-0}
+    \includegraphics<2>[width=\textwidth]{img/interaction-1}
+    \includegraphics<3>[width=\textwidth]{img/interaction-2}
+    \includegraphics<4>[width=\textwidth]{img/interaction-3}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Subtree queries}
+  Two main ideas:
+  \pause
+  \metroset{block=fill}
+  \begin{block}{Enforcing constraints}
+    To enforce constraints, we use
+    a modified SPR move that avoids
+    regraft branches that violate constraints.
+  \end{block}
+  \pause
+  \metroset{block=fill}
+  \begin{block}{Intelligent subset queries}
+    We pick subsets of data that have high variance,
+    which we can measure using samples.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Results}
+  \begin{figure}
+    \centering
+    \includegraphics[frame, width=0.6\textwidth]{img/interactive}
+    \caption{The results of interactive Bayesian hierarchical clustering
+    on a dataset of zoo animals. Pictured are the
+    data log likelihood and percentage of triplets
+    satisfied for several subset querying methods. Source: \cite{Vikram2016}}
+    \label{fig:ibhc}
+  \end{figure}
+\end{frame}
+\section{Conclusion}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item<1-> Bayesian hierarchical clustering (BHC) is a general framework
+      in unsupervised learning that naturally handles
+      ambiguity and uncertainty in data.
+    \item<2-> BHC models can be decomposed into prior distributions
+      on trees, and likelihood models. Tree priors
+      can further be decomposed into
+      coalescent and diffusion models.
+    \item<3-> Inference in BHC can be performed
+      with MCMC methods like Metropolis-Hastings
+      using the subtree-prune and regraft move.
+    \item<4-> BHC enables
+      incorporating user interaction
+      into hierarchical clustering.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Future work}
+  \begin{itemize}
+    \item<1-> \textbf{How can we improve on interactive Bayesian hierarchical clustering?}
+      Robust constraints, more tree priors, other measures of variance
+    \item<2-> \textbf{What is the effect of interaction in Bayesian problems?}
+      constrained posterior distributions, complexity of inference
+    \item<3-> \textbf{How can we extend interactive methods
+      to other domains?} metric learning, deep learning,
+      embeddings
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[standout]
+Questions?
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+  \bibliography{main}
+  \bibliographystyle{unsrt}
+\end{frame}
+
+\appendix
 
 \begin{frame}{Time-marginalized coalescent}
   \begin{itemize}
@@ -523,88 +838,6 @@
   \end{itemize}
 \end{frame}
 
-\subsection{Diffusion models}
-
-\begin{frame}{Diffusion models}
-  Basic idea: begin with a tree over
-    one data, then for $N$ iterations:
-  \begin{itemize}
-    \item Sample a branch and time at random.
-    \item Attach a leaf to the branch,
-      creating a new internal node with the sampled time.
-  \end{itemize}
-  \begin{center}
-    \includegraphics<2>[width=\textwidth]{img/diffusion-1}
-    \includegraphics<3>[width=\textwidth]{img/diffusion-2}
-    \includegraphics<4>[width=\textwidth]{img/diffusion-3}
-    \includegraphics<5>[width=\textwidth]{img/diffusion-4}
-  \end{center}
-\end{frame}
-
-\begin{frame}{Dirichlet diffusion tree}
-    The simplest model is the Dirichlet diffusion tree (DDT),
-    which produces trees with both ordering
-    and times associated with internal nodes \cite{Neal2003}.
-
-    The model is defined inductively via a continuous time
-    process. Assume we have a tree of size $i - 1$.
-
-    \pause
-
-    \begin{center}
-      \includegraphics[width=0.2\textwidth]{img/ddt-1}
-    \end{center}
-
-    On each iteration, a particle labeled $i$ begins at the root and travels downwards.
-\end{frame}
-
-\begin{frame}{Dirichlet diffusion tree}
-  \textbf{Case 1:} 
-  The particle reaches an internal node.
-  \begin{center}
-      \includegraphics[width=0.13\textwidth]{img/ddt-2}
-  \end{center}
-
-  \pause
-
-  It picks one of the branches proportional to the past number
-  of particles that have picked either branch.
-
-  \pause
-
-  \begin{center}
-      \includegraphics[width=0.17\textwidth]{img/ddt-3}
-  \end{center}
-\end{frame}
-
-\begin{frame}{Dirichlet diffusion tree}
-  \textbf{Case 2:} 
-  The particle \emph{diverges} on its current branch,
-  creating an internal node and a leaf.
-  The probability of divergence is calculated from
-  an \alert{acquisition function}, $a(t)$.
-
-
-  \begin{center}
-      \includegraphics[width=0.09\textwidth]{img/ddt-4}
-  \end{center}
-
-  \pause
-
-  Let $m$ be the number of past particles that have traversed the current branch.
-  The probability of diverging at time $dt$ is $a(t)dt/m$.
-
-  \pause
-
-  \begin{center}
-      \includegraphics[width=0.18\textwidth]{img/ddt-5}
-  \end{center}
-
-  \pause
-
-  If $a(1) = \infty$, each particle is guaranteed to diverge before $t = 1$.
-
-\end{frame}
 
 \begin{frame}{Pitman-Yor diffusion tree}
   The DDT has been extended to
@@ -677,262 +910,6 @@
   \end{align}
 
 \end{frame}
-
-\begin{frame}{Generalizations}
-  \begin{center}
-    \includegraphics<1>[width=0.8\textwidth]{img/tree-graph-0}
-    \includegraphics<2>[width=0.8\textwidth]{img/tree-graph-1}
-    \includegraphics<3>[width=0.8\textwidth]{img/tree-graph-2}
-    \includegraphics<4>[width=0.8\textwidth]{img/tree-graph-3}
-    \includegraphics<5>[width=0.8\textwidth]{img/tree-graph-4}
-    \includegraphics<6>[width=0.8\textwidth]{img/tree-graph-5}
-    \includegraphics<7>[width=0.8\textwidth]{img/tree-graph-6}
-    \includegraphics<8>[width=0.8\textwidth]{img/tree-graph-7}
-  \end{center}
-\end{frame}
-
-\begin{frame}{Tree likelihood models}
-  Now, given a sample from a tree prior (assume a
-  cladogram with ordering and times),
-  we need to generate a dataset.
-
-  \begin{center}
-    \includegraphics<1>[width=\textwidth]{img/tree-data-0}
-    \includegraphics<2>[width=\textwidth]{img/tree-data-1}
-  \end{center}
-
-\end{frame}
-
-\begin{frame}{Latent tree parameters}
-  For every internal node in the tree $n$
-  we associate a latent parameter $\theta_n$
-  which is in the same space as the data.
-
-  \begin{center}
-    \includegraphics<2->[width=0.35\textwidth]{img/tree-4-parameters}
-  \end{center}
-
-  \pause
-
-  We then define:
-  \begin{itemize}
-    \item<3-> A prior distribution $P_0(\theta)$ from which $\theta_0$ is generated
-    \item<4-> A transition kernel $T(\theta' | \theta)$ that describes a Markov
-      process beginning at the root. Each parameter $\theta'$ is generated
-      conditioned solely on its parent $\theta$. In addition, leaves are generated
-      conditioned on their parent.
-  \end{itemize}
-
-\end{frame}
-
-\begin{frame}{Example likelihood models}
-  The most common likelihood model is \alert{Brownian motion},
-  also called Gaussian diffusion, which is
-  \begin{align}
-    P_0(\theta) &= \mathcal{N}(0, \sigma_0^2I) \\
-    T(\theta' | \theta) &= \mathcal{N}(\theta, \sigma^2(t - t')),
-  \end{align}
-  where $t$ and $t'$ are the times associated with nodes
-  $\theta$ and $\theta'$ and $\sigma_0^2$ and $\sigma^2$ are hyperparameters.
-
-  \pause
-
-  Other options are:
-  \begin{itemize}
-    \item Multinomial-Dirichlet diffusion: useful for
-      categorical data
-    \item Multinomial diffusion: useful for
-      counts (such as bag-of-words)
-  \end{itemize}
-\end{frame}
-
-\subsection{Inference}
-\begin{frame}{Inference}
-  Recall the latent variable model.
-  \begin{center}
-    \includegraphics[width=0.3\textwidth]{img/bhc-lvm}
-  \end{center}
-  \pause
-
-  We are interested in computing the posterior distribution
-  $P(T, \theta | X)$ and the posterior marginal distribution
-  $P(T | X)$.
-
-  \pause
-
-  Both of these distributions are generally impossible
-  to write out analytically, so we use approximate methods.
-  In this report, we'll focus on a particular sampling method.
-\end{frame}
-
-\begin{frame}{Metropolis-Hastings}
-  
-  The \alert{Metropolis-Hastings} (MH) algorithm
-  is an MCMC method that uses
-  samples from a distribution $p(x)$ to approximate it.
-
-  \pause
- \metroset{block=fill}
-  \begin{block}{Metropolis-Hastings algorithm}
-  \begin{itemize}
-    \item Given initial distribution $p_0(x)$ and proposal distribution
-      $q(x'|x)$
-    \item Instantiate $x_0$ by sampling $p_0(x)$.
-      \pause
-    \item Repeat for $t = 1 \ldots T$
-      \pause
-      \begin{itemize}
-        \item Sample $x'$ from $q(x'|x_{t - 1})$.
-      \pause
-        \item Calculate acceptance ratio
-          \begin{align}
-              \alpha = \frac{p(x')q(x_t | x')}{p(x_t)q(x' | x_t)}
-          \end{align}
-      \pause
-        \item If $\alpha > 1$, accept the sample, setting $x_t = x'$
-      \pause
-        \item If $\alpha \le 1$, accept $x'$ with probability $\alpha$
-          and reject otherwise, setting $x_t = x_{t - 1}$.
-      \end{itemize}
-  \end{itemize}
-\end{block}
-  \pause
-  We now have samples $x_0, \ldots, x_T$.
-\end{frame}
-
-\begin{frame}{Sampling latent variables}
-  Recall that we are interested in $P(T, \theta | X)$.
-  To sample from the posterior using MH,
-  we need to define a proposal distribution
-  $q(T', \theta' | T, \theta)$ and an initial distribution $p_0(T, \theta)$.
-  \begin{itemize}
-    \item<2-> $p_0(T, \theta)$ is easy: just sample the tree prior
-      and the tree likelihood model
-    \item<3-> $q(T', \theta'| T, \theta)$ can be decoupled
-      into two proposals: a 
-      tree proposal $q_\mathcal{T}(T' | T)$
-      and parameter proposal $q_\Theta(\theta' | T', \theta)$.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Subtree-prune and regraft}
-  The \alert{subtree-prune and regraft} (SPR) move
-  is a popular tree proposal distribution.
-
-  An SPR move consists of a \emph{prune} and a \emph{regraft}.
-
-  \begin{center}
-    \includegraphics<2>[width=\textwidth]{img/spr-1}
-    \includegraphics<3>[width=\textwidth]{img/spr-2}
-    \includegraphics<4>[width=\textwidth]{img/spr-3}
-  \end{center}
-
-  \pause
-
-  Let $T$ be a tree, $s$ be a non-root node in $T$ selected randomly and $S$ be its associated subtree.
-  \begin{itemize}
-    \item<3->
-      We first prune
-      $S$ from $T$ by
-      remove $s$'s parent $p$ from the tree,
-      replacing $p$ with $s$'s sibling.
-    \item<4-> We then 
-      regraft $p$ to $T$,
-      by first randomly selecting a branch in $T$,
-      and attaching $s$ to the branch.
-  \end{itemize}
-\end{frame}
-
-
-\begin{frame}{Sampling latent parameters}
-  We now have $q_\mathcal{T}(T' | T)$, the tree proposal distribution
-   and have several options for the parameter proposal distribution:
-
-   \begin{itemize}
-     \item<2-> \textbf{Gibbs sampling:} since the parameters are generated
-       in a Markovian process, the conditional distributions are often
-       easy to compute
-     \item<3-> \textbf{Marginalization via belief propagation:} if we're not
-       interested in the parameters at all, we can marginalize them out
-       and just sample tree structure via the tree proposal distribution
-     \item<3-> \textbf{Other MCMC methods:} examples are slice sampling,
-       and sequential Monte Carlo
-   \end{itemize}
-\end{frame}
-
-\section{Adding interaction}
-
-\begin{frame}{Why interaction?}
-  Recall the motivating example for Bayesian hierarchical clustering.
-  \begin{center}
-  \includegraphics[width=0.3\textwidth]{img/3-cluster}\hfill
-  \includegraphics[width=0.45\textwidth]{img/3-cluster-line}
-  \end{center}
-  Could a user provide feedback and help decide which hierarchy
-  makes the most sense?
-  \begin{itemize}
-    \item Interactive Bayesian Hierarchical Clustering - Vikram and Dasgupta (2016) \cite{Vikram2016}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Interactive hierarchical clustering}
-  We first consider \emph{how} the user interacts
-  with the algorithm.
-
-  We propose the user provides feedback in the form
-  of a \alert{triplet} of leaves $(\{a, b\}, c)$, which stipulates
-  that $a$ must be in a subtree with $b$ that does not
-  include $c$.
-
- \metroset{block=fill}
-  \begin{block}{Simple method}
-    \begin{itemize}
-      \item Run a hierarchical clustering algorithm to obtain tree $T$.
-      \item Repeat:
-        \begin{itemize}
-          \item Show $T$ to a user and they will return a triplet that is violated by $T$.
-          \item Fix $T$ to not violate the triplet.
-        \end{itemize}
-    \end{itemize}
-  \end{block}
-
-  This is difficult for a user to do if the tree is too big!
-
-\end{frame}
-
-\begin{frame}{Subtree queries}
-  We propose \alert{subtree queries}. Rather than showing
-  the user the entire hierarchy $T$, we select a subset of data $S$
-  and show the user the hierarchy
-  restricted to a subset of the data, $T|_S$.
-
-  \pause
-
- \metroset{block=fill}
-  \begin{block}{Subtree querying method}
-  \begin{itemize}
-    \item Run a hierarchical clustering algorithm to obtain tree $T$.
-    \item Repeat:
-      \begin{itemize}
-        \item Select subset $S$ of the data.
-        \item Show $T|_S$ to a user 
-          and they will return a triplet that is violated by $T|_S$.
-        \item Fix $T$ to not violate the triplet.
-      \end{itemize}
-  \end{itemize}
-  \end{block}
-
-  \pause
-  We now need to specify methods to
-  \begin{itemize}
-    \item Enforce triplet constraints in a clustering algorithm
-    \item Select subsets to show the user
-  \end{itemize}
-  Bayesian learning provides
-  elegant ways to design such methods.
-\end{frame}
-
-
 \begin{frame}{Enforcing triplet constraints}
   We can easily enforce triplet constraints
   in Bayesian hierarchical clustering.
@@ -974,56 +951,5 @@
   We now instantiate several random subsets and show the user the one with the highest TDV.
 \end{frame}
 
-\begin{frame}{Results}
-  \begin{figure}
-    \centering
-    \includegraphics[frame, width=0.6\textwidth]{img/interactive}
-    \caption{The results of interactive Bayesian hierarchical clustering
-    on a dataset of zoo animals. Pictured are the
-    data log likelihood and percentage of triplets
-    satisfied for several subset querying methods. Source: \cite{Vikram2016}}
-    \label{fig:ibhc}
-  \end{figure}
-\end{frame}
-\section{Conclusion}
-
-\begin{frame}{Summary}
-  \begin{itemize}
-    \item<1-> Bayesian hierarchical clustering (BHC) is a general framework
-      in unsupervised learning that naturally handles
-      ambiguity and uncertainty in data.
-    \item<2-> BHC models can be decomposed into prior distributions
-      on trees, and likelihood models. Tree priors
-      can further be decomposed into
-      coalescent and diffusion models.
-    \item<3-> Inference in BHC can be performed
-      with MCMC methods like Metropolis-Hastings
-      using the subtree-prune and regraft move.
-    \item<4-> BHC enables
-      incorporating user interaction
-      into hierarchical clustering.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Future work}
-  \begin{itemize}
-    \item<1-> \textbf{How can we improve on interactive Bayesian hierarchical clustering?}
-      Robust constraints, more tree priors, other measures of variance
-    \item<2-> \textbf{What is the effect of interaction in Bayesian problems?}
-      constrained posterior distributions, complexity of inference
-    \item<3-> \textbf{How can we extend interactive methods
-      to other domains?} metric learning, deep learning,
-      embeddings
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[standout]
-Questions?
-\end{frame}
-
-\begin{frame}[allowframebreaks]{References}
-  \bibliography{main}
-  \bibliographystyle{unsrt}
-\end{frame}
 
 \end{document}

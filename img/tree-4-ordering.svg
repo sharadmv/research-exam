@@ -72,8 +72,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8284271"
-     inkscape:cx="99.81929"
-     inkscape:cy="967.24731"
+     inkscape:cx="31.706042"
+     inkscape:cy="951.90778"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -307,5 +307,53 @@
          x="147.70206"
          y="67.279701"
          style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;font-family:'Fira Sans';-inkscape-font-specification:'Fira Sans Light'">t = 0.7</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="24.185398"
+       y="124.68188"
+       id="text19786-5-5-95"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan19788-9-8-0"
+         x="24.185398"
+         y="124.68188"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;font-family:'Fira Sans';-inkscape-font-specification:'Fira Sans Light'">t = 1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="77.116119"
+       y="124.6056"
+       id="text19786-5-5-95-4"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan19788-9-8-0-4"
+         x="77.116119"
+         y="124.6056"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;font-family:'Fira Sans';-inkscape-font-specification:'Fira Sans Light'">t = 1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="113.75735"
+       y="124.55534"
+       id="text19786-5-5-95-1"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan19788-9-8-0-9"
+         x="113.75735"
+         y="124.55534"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;font-family:'Fira Sans';-inkscape-font-specification:'Fira Sans Light'">t = 1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="167.67067"
+       y="124.68188"
+       id="text19786-5-5-95-6"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan19788-9-8-0-6"
+         x="167.67067"
+         y="124.68188"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:7.5px;font-family:'Fira Sans';-inkscape-font-specification:'Fira Sans Light'">t = 1</tspan></text>
   </g>
 </svg>
